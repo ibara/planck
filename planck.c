@@ -96,7 +96,7 @@ dputs(const char *s, int fd)
 static void
 dputi(int n, int fd)
 {
-	char num[4];
+	char num[5];
 	int i = 0;
 
 	do {
@@ -142,7 +142,7 @@ main(int argc, char *argv[])
 {
 	char file[1024], line[128];
 	char buf[5], c;
-	int co = 0, fd, i, j, li = 0;
+	int co = 0, fd, i, j, li = 0, save_name = 0;
 
 	if (argc > 2) {
 		dputs("usage: ", 2);
@@ -157,12 +157,14 @@ main(int argc, char *argv[])
 			file[i] = argv[1][i];
 		file[i] = '\0';
 
+		save_name = 1;
+
 		if ((fd = open(file, 0x0000, 0)) == -1) {
 			dputs("planck: error: could not open ", 2);
 			dputs(file, 2);
 			dputs("\n", 2);
 
-			_exit(1);
+			goto begin;
 		}
 
 		co = 0;
@@ -197,6 +199,7 @@ main(int argc, char *argv[])
 		}
 	}
 
+begin:
 	dputi(li, 1);
 	dputs("\n", 1);
 
@@ -276,9 +279,10 @@ get_command:
 	case 'q':
 		goto done;
 	case 's':
-		if (argc == 1) {
+		if (save_name == 0) {
 			dputs("File: ", 1);
 			dgets(file, sizeof(file), 0);
+			save_name = 1;
 		}
 
 		if ((fd = open(file, 0x0001 | 0x0200, 000644)) == -1) {
