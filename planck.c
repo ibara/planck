@@ -236,7 +236,8 @@ get_command:
 			dputs(linecol[li], 1);
 			dputs("\n", 1);
 		}
-		(void) dgets(line, sizeof(line) - 1, 0);
+		if (dgets(line, sizeof(line) - 1, 0) == 0)
+			break;
 		for (i = 0; i < 128; i++)
 			linecol[li][i] = '\0';
 		for (i = 0; i < strlen(line); i++)
