@@ -8,8 +8,8 @@ editor.
 Why?
 ----
 Read my
-[blog post]()
-about this codebase. (Blog post forthcoming.)
+[blog post](https://briancallahan.net/blog/20200816.html)
+about this codebase.
 
 Building
 --------
