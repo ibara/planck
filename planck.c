@@ -20,8 +20,6 @@
 
 extern void *_syscall(void *n, void *a, void *b, void *c, void *d, void *e);
 
-static char linecol[1024][128];
-
 static void
 _exit(int status)
 {
@@ -140,6 +138,7 @@ dgeti(char *s, int size, int fd)
 int
 main(int argc, char *argv[])
 {
+	char linecol[1024][128];
 	char file[1024], line[128];
 	char buf[5], c;
 	int co = 0, fd, i, j, li = 0, save_name = 0;
@@ -150,6 +149,11 @@ main(int argc, char *argv[])
 		dputs(" [file]\n", 2);
 
 		_exit(1);
+	}
+
+	for (i = 0; i < 1024; i++) {
+		for (j = 0; j < 128; j++)
+			linecol[i][j] = '\0';
 	}
 
 	if (argc == 2) {
