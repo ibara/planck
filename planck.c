@@ -41,18 +41,18 @@ write(int d, const void *buf, unsigned long nbytes)
 	return (long) _syscall((void *) 4, (void *) d, (void *) buf, (void *) nbytes, (void *) 0, (void *) 0);
 }
 
-static int
+static long
 open(const char *path, int flags, int mode)
 {
 
-	return (int) _syscall((void *) 5, (void *) path, (void *) flags, (void *) mode, (void *) 0, (void *) 0);
+	return (long) _syscall((void *) 5, (void *) path, (void *) flags, (void *) mode, (void *) 0, (void *) 0);
 }
 
-static int
+static long
 close(int d)
 {
 
-	return (int) _syscall((void *) 6, (void *) d, (void *) 0, (void *) 0, (void *) 0, (void *) 0);
+	return (long) _syscall((void *) 6, (void *) d, (void *) 0, (void *) 0, (void *) 0, (void *) 0);
 }
 
 static unsigned long
@@ -163,16 +163,14 @@ main(int argc, char *argv[])
 
 		save_name = 1;
 
-		if ((fd = open(file, 0x0000, 0)) == -1) {
-			dputs("planck: error: could not open ", 2);
+		if ((fd = open(file, 0x0000, 0)) < 3) {
+			dputs("planck: error: cannot open ", 2);
 			dputs(file, 2);
 			dputs("\n", 2);
 
 			goto begin;
 		}
 
-		co = 0;
-		li = 0;
 		while (read(fd, &c, 1) > 0) {
 			linecol[li][co] = c;
 
@@ -273,8 +271,17 @@ get_command:
 		break;
 	case 'p':
 		if (li == 0) {
-			for (i = 0; linecol[i][0] != '\0' ; i++)
+			for (i = 0; linecol[i][0] != '\0' ; i++) {
+				if (i < 999)
+					dputs(" ", 1);
+				if (i < 99)
+					dputs(" ", 1);
+				if (i < 9)
+					dputs(" ", 1);
+				dputi(i + 1, 1);
+				dputs(" ", 1);
 				dputs(linecol[i], 1);
+			}
 		} else if (linecol[li - 1][0] == '\0') {
 			dputs("?\n", 1);
 		} else {
